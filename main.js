@@ -51,8 +51,10 @@ bot.on("message", function (msg) {
         try {
             var evaled = eval(code);
             var t1 = now();
-            if(evaled.length > 2000) {
-                evaled.substr(evaled.length-1000, evaled.length)
+            if(evaled.length) {
+                if (evaled.length >= 2000) {
+                    evaled = evaled.substr(evaled.length - 1000, evaled.length)
+                }
             }
             bot.updateMessage(msg, "```xl\n" +
                 clean(code) +
