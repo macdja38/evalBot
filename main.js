@@ -78,8 +78,8 @@ bot.on("message", function (msg) {
         var t0 = now();
         exec(code, (error, stdout, stderr) => {
             var t1 = now();
-            if(stdout.length > 1000) {
-                stdout = stdout.substr(stdout.length-1000, stdout.length)
+            if(stdout.length > 1200) {
+                stdout = stdout.substr(stdout.length-1199, stdout.length)
             }
             if(!error) {
                 bot.updateMessage(msg, "```xl\n" +
