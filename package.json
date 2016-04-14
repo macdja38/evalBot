@@ -1,6 +1,6 @@
 {
   "name": "evalBot",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "private": true,
   "dependencies": {
     "discord.js": "^6.1.0",
