@@ -51,7 +51,7 @@ bot.on("message", function (msg) {
         try {
             var evaled = eval(code);
             var t1 = now();
-            if(evaled.length) {
+            if(evaled) {
                 if (evaled.length >= 2000) {
                     evaled = evaled.substr(evaled.length - 1000, evaled.length)
                 }
@@ -80,17 +80,19 @@ bot.on("message", function (msg) {
         var t0 = now();
         exec(code, (error, stdout, stderr) => {
             var t1 = now();
-            if(stdout.length > 1200) {
-                stdout = stdout.substr(stdout.length-1199, stdout.length)
-            }
             if(!error) {
+                if(stdout) {
+                    if (stdout.length > 1300) {
+                        stdout = stdout.substr(stdout.length - 1299, stdout.length)
+                    }
+                }
                 bot.updateMessage(msg, "```xl\n" +
                     clean(code) +
                     "\n- - - - - - evaluates-to- - - - - - -\n" +
                     clean(stdout) +
                     "- - - - - - - - - - - - - - - - - - -\n" +
                     "In " + (t1 - t0) + " milliseconds!\n```");
-                console.log(evaled);
+                console.log(stdout);
             }
             else {
                 bot.updateMessage(msg, "```xl\n" +
