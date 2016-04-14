@@ -7,13 +7,13 @@
  change in the future.
  */
 
-
-
 var Discord = require("discord.js");
 var now = require("performance-now");
 var exec = require("child_process").exec;
 
-var AuthDetails = require("../auth.json");
+var updateCraft = "/Bots/PvPCraft/./fetch.sh";
+
+var AuthDetails = require("../../../auth.json");
 
 // Get the email and password
 //var AuthDetails = require("auth.json");
