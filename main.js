@@ -51,6 +51,9 @@ bot.on("message", function (msg) {
         try {
             var evaled = eval(code);
             var t1 = now();
+            if(evaled.length > 2000) {
+                evaled.substr(evaled.length-1000, evaled.length)
+            }
             bot.updateMessage(msg, "```xl\n" +
                 clean(code) +
                 "\n- - - - - - evaluates-to- - - - - - -\n" +
@@ -75,6 +78,9 @@ bot.on("message", function (msg) {
         var t0 = now();
         exec(code, (error, stdout, stderr) => {
             var t1 = now();
+            if(stdout.length > 1000) {
+                stdout = stdout.substr(evaled.length-1000, evaled.length)
+            }
             if(!error) {
                 bot.updateMessage(msg, "```xl\n" +
                     clean(code) +
