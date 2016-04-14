@@ -5,7 +5,7 @@
  this bot is a permissions bot and is currently working
  with the experimental additions. Some functions may
  change in the future.
- */
+*/
 
 var Discord = require("discord.js");
 var now = require("performance-now");
