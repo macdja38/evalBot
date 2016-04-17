@@ -12,8 +12,8 @@ var Discord = require("discord.js");
 var now = require("performance-now");
 var exec = require("child_process").exec;
 
-var DiscordHacks = require("../../../discordHacks.js");
-var dh = new DiscordHacks("../../../ammo.json", require("../../../ammo.json"));
+var DiscordHacks = require("../../discordHacks.js");
+var dh = new DiscordHacks("../../ammo.json", require("../../ammo.json"));
 
 var updateCraft = "/Bots/PvPCraft/./fetch.sh";
 
@@ -22,9 +22,10 @@ var AuthDetails = require("../../../auth.json");
 // Get the email and password
 //var AuthDetails = require("auth.json");
 
-var bot = new Discord.Client(); //{forceFetchUsers: true}
+var bot = new Discord.Client({forceFetchUsers: true});
 
 bot.on("ready", function () {
+    bot.setStatusIdle();
     console.log("Ready to begin! Serving in " + bot.channels.length + " channels");
     console.log("users: " + bot.users.length);
 });
