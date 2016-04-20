@@ -110,12 +110,8 @@ bot.on("message", function (msg) {
             }
         });
     }
-    else if (msg.author.id === bot.user.id && /:\w+:/g.test(msg.content)) {
-        dh.hax(msg, bot)
-    }
-    if (msg.author.id !== bot.user.id && /<:(\w+):\d+>/g.test(msg.content)) {
-        console.log("Adding from " + msg.content);
-        dh.add(msg.content);
+    else {
+        dh.msghax(msg, bot);
     }
 });
 
