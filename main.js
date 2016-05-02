@@ -111,9 +111,11 @@ bot.on("message", function (msg) {
         });
     }
     else {
-        dh.msghax(msg, bot);
+        dh.msgHax(msg, bot);
     }
 });
+
+bot.on("warn",console.log);
 
 function clean(text) {
     if (typeof(text) === "string") {
@@ -124,4 +126,8 @@ function clean(text) {
     }
 }
 
-bot.loginWithToken(AuthDetails.jake.token);
+bot.loginWithToken(AuthDetails.jake.token, (error)=>{
+    if(error !== null) {
+        console.error(error);
+    }
+});
