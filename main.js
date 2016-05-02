@@ -115,8 +115,6 @@ bot.on("message", function (msg) {
     }
 });
 
-bot.on("warn",console.log);
-
 function clean(text) {
     if (typeof(text) === "string") {
         return text.replace("``", "`" + String.fromCharCode(8203) + "`");
