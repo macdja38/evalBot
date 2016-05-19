@@ -22,19 +22,23 @@ var AuthDetails = require("../../../auth.json");
 // Get the email and password
 //var AuthDetails = require("auth.json");
 
-var bot = new Discord.Client({forceFetchUsers: true});
+var hasConnected = false;
+
+var bot = new Discord.Client({forceFetchUsers: true, autoReconnect: true});
 
 bot.on("ready", function () {
     bot.setStatusIdle();
-    console.log("Ready to begin! Serving in " + bot.channels.length + " channels");
-    console.log("users: " + bot.users.length);
+    if(!hasConnected) {
+        console.log("Ready to begin! Serving in " + bot.channels.length + " channels");
+        console.log("users: " + bot.users.length);
+        hasConnected = true;
+    } else {
+        console.error("Reconnected Successfully")
+    }
 });
 
 bot.on("disconnected", function () {
-
     console.error("Disconnected!");
-    process.exit(1); //exit node.js with an error
-
 });
 
 bot.on("message", function (msg) {
