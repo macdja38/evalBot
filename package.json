@@ -1,6 +1,6 @@
 {
   "name": "evalBot",
-  "version": "2.0",
+  "version": "0.2.0",
   "private": true,
   "dependencies": {
     "discord.js": "hydrabolt/discord.js#indev",
