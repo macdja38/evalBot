@@ -1,0 +1,9 @@
+{
+  "apps": [
+    {
+      "name": "evalBot",
+      "script": "main.js",
+      "args": "--color"
+    }
+  ]
+}
