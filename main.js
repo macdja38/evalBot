@@ -16,16 +16,21 @@ var DiscordHacks = require("./discordHacks.js");
 
 var dh = new DiscordHacks("./ammo.json", require("./ammo.json"));
 
-var updateCraft = "/Bots/PvPCraft/./fetch.sh";
-
 var AuthDetails = require("./auth.json");
 
 // Get the email and password
 //var AuthDetails = require("auth.json");
 
+//these are global variables you can use within eval statements for whatever.
+var v1;
+var v2;
+var v3;
+
 var hasConnected = false;
 
 var bot = new Discord.Client({forceFetchUsers: true, autoReconnect: true});
+//increase compatibility with other users code when using eval.
+var client = bot;
 
 bot.on("ready", function () {
     bot.setStatusIdle();
@@ -57,6 +62,10 @@ bot.on("message", function (msg) {
     }
     if (msg.author.id === bot.user.id && msg.content.indexOf("eval ") == 0) {
         var code = msg.content.slice(5);
+        var message = msg;
+        //should simplify some commands.
+        var server = message.channel.server;
+        var channel = msg.channel;
         var t0 = now();
         try {
             var evaled = eval(code);

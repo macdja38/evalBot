@@ -45,9 +45,9 @@ DiscordHacks.prototype.add = function (msg) {
     for (var part of parts) {
         console.log(part);
         if((/<:\w+:\d+>/g.test(part))) {
-            console.log(true);
+            console.log("Is a valid emote");
             if((this.ammo[part.match(/<:(\w+):\d+>/)[1]] == null)) {
-                console.log("found part and adding");
+                console.log("Is not already in the database and is being added.");
                 var key = part.match(/<:(\w+):(\d+)>/);
                 this.ammo[key[1]] = {};
                 this.ammo[key[1]].name = key[1];
