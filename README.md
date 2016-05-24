@@ -13,7 +13,7 @@ simple bot to eval and execute things for it's master
 
 # Token
 If you are new to discord bot's you may not know how to find your token. Don't worry it's not too bad.
- - open discord in your browser on the client.
+ - open discord in your browser or in the client.
  - Press `Ctrl` + `Shift` + `I`
  - open the `resources` or `storage` tab depending on your thing.
  - Open `Local storage`.
