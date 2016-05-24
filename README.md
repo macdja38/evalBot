@@ -2,6 +2,8 @@
 simple bot to eval and execute things for it's master
 
 # installation instructions
+ Requires **node.js** greater than v4 and npm. **pm2** is optional but highly recomended.
+
  - `git clone`
  - open that directory.
  - `npm install --no-optional`
