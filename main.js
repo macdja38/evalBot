@@ -204,10 +204,10 @@ bot.on("message", function (msg) {
                         }
                     }
                     else {
-                        msg.reply("setWelcome <true|false>")
+                        msg.reply("`setWelcome <true|false>`")
                     }
                 } else {
-                    msg.reply("setWelcome <true|false>")
+                    msg.reply("`setWelcome <true|false>`")
                 }
             } catch (error) {
                 console.error(error);

@@ -3,11 +3,10 @@
   "exec": true,
   "emote": true,
   "welcome": {
-    "enable": true,
+    "enable": false,
     "onlyWhenOnline": true,
     "servers": [
-      "77176186148499456",
-      "115904439990091779"
+      "45948121594753455"
     ],
     "messages": [
       "Welcome to the **$server** discord **$user**!",
