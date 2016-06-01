@@ -51,50 +51,50 @@ bot.on("disconnected", function () {
     console.error("Disconnected!");
 });
 
-bot.on('serverNewMember', (server, user)=>{
+bot.on('serverNewMember', (server, user)=> {
     console.log(user.username + " joined " + server.name);
-    if(config.get("welcome", {enable:false}).enable && config.get("welcome", {servers:[]}).servers.includes(server.id)) {
+    if (config.get("welcome", {enable: false}).enable && config.get("welcome", {servers: []}).servers.indexOf(server.id)>-1) {
         console.log("Welcoming is enabled and this server is on the list");
         /* this won't work because the bot can't tell if it's online.
-        if(config.get("welcome", {onlyWhenOnline:true}).onlyWhenOnline) {
-            console.log("Master is" + bot.user.status);
-            if(bot.user.status != "online") {
-                return;
-            }
-        }
-        console.log("Bots master is online");
-        */
+         if(config.get("welcome", {onlyWhenOnline:true}).onlyWhenOnline) {
+         console.log("Master is" + bot.user.status);
+         if(bot.user.status != "online") {
+         return;
+         }
+         }
+         console.log("Bots master is online");
+         */
         var messages = config.get("welcome", {
             messages: ["Welcome **$user**!"]
         }).messages;
         var min = config.get("welcome", {minDelay: 3}).minDelay;
         var max = config.get("welcome", {maxDelay: 20}).maxDelay;
         var typingInterval = config.get("welcome", {typingInterval: 3}).typingInterval;
-        var msgDelay = Math.floor(Math.random() * (max-min)) + min;
-        console.log("Welcoming in " +  msgDelay + "s");
-        if(msgDelay > typingInterval+2) {
+        var msgDelay = Math.floor(Math.random() * (max - min)) + min;
+        console.log("Welcoming in " + msgDelay + "s");
+        if (msgDelay > typingInterval + 2) {
             console.log("Will pretend to type.");
             setTimeout(()=> {
                 console.log("Started Tying");
                 bot.startTyping(server.general);
-            },(msgDelay - typingInterval) * 1000);
+            }, (msgDelay - typingInterval) * 1000);
             setTimeout(()=> {
                 console.log("Stopped Typing");
                 bot.stopTyping(server.general);
-            },(msgDelay) * 1000);
+            }, (msgDelay) * 1000);
             //just in case one of the other possible things that stop it don't stop it
             setTimeout(()=> {
                 console.log("Stopped Typing just in case");
                 bot.stopTyping(server.general);
-            },(msgDelay + 10) * 1000);
+            }, (msgDelay + 10) * 1000);
         }
-        setTimeout(()=>{
-        bot.sendMessage(
-            server.general,
-            clean(messages[Math.floor(Math.random() * messages.length)]
-                .replace(/\$server/g, server.name).replace(/\$user/g, user.username))
+        setTimeout(()=> {
+            bot.sendMessage(
+                server.general,
+                clean(messages[Math.floor(Math.random() * messages.length)]
+                    .replace(/\$server/g, server.name).replace(/\$user/g, user.username))
             );
-        },msgDelay*1000
+        }, msgDelay * 1000
         )
     }
 });
@@ -114,47 +114,48 @@ bot.on("message", function (msg) {
      }*/
     if (msg.author.id === bot.user.id) {
         if (msg.content.indexOf("eval ") == 0) {
-            (function(){
+            (function () {
                 var t0;
                 var t1;
                 var code = msg.content.slice(5);
                 var client = bot;
+                //noinspection UnnecessaryLocalVariableJS
                 var message = msg;
-            //should simplify some commands.
-            var server = message.channel.server;
-            var channel = msg.channel;
-            t0 = now();
-            try {
-                var evaled = eval(code);
-                t1 = now();
-                if (evaled) {
-                    if (evaled.length >= 2000) {
-                        evaled = evaled.substr(evaled.length - 1000, evaled.length)
+                //should simplify some commands.
+                var server = message.channel.server;
+                var channel = msg.channel;
+                t0 = now();
+                try {
+                    var evaled = eval(code);
+                    t1 = now();
+                    if (evaled) {
+                        if (evaled.length >= 2000) {
+                            evaled = evaled.substr(evaled.length - 1000, evaled.length)
+                        }
                     }
+                    bot.updateMessage(msg, "```xl\n" +
+                        clean(code) +
+                        "\n- - - - - - evaluates-to- - - - - - -\n" +
+                        clean(evaled) +
+                        "\n- - - - - - - - - - - - - - - - - - -\n" +
+                        "In " + (t1 - t0) + " milliseconds!\n```");
+                    console.log(evaled);
                 }
-                bot.updateMessage(msg, "```xl\n" +
-                    clean(code) +
-                    "\n- - - - - - evaluates-to- - - - - - -\n" +
-                    clean(evaled) +
-                    "\n- - - - - - - - - - - - - - - - - - -\n" +
-                    "In " + (t1 - t0) + " milliseconds!\n```");
-                console.log(evaled);
-            }
-            catch (error) {
-                t1 = now();
-                bot.updateMessage(msg, "```xl\n" +
-                    clean(code) +
-                    "\n- - - - - - - errors-in- - - - - - - \n" +
-                    clean(error) +
-                    "\n- - - - - - - - - - - - - - - - - - -\n" +
-                    "In " + (t1 - t0) + " milliseconds!\n```");
-                console.error(error);
-            }
+                catch (error) {
+                    t1 = now();
+                    bot.updateMessage(msg, "```xl\n" +
+                        clean(code) +
+                        "\n- - - - - - - errors-in- - - - - - - \n" +
+                        clean(error) +
+                        "\n- - - - - - - - - - - - - - - - - - -\n" +
+                        "In " + (t1 - t0) + " milliseconds!\n```");
+                    console.error(error);
+                }
             })();
             return;
         }
         if (msg.content.indexOf("exec ") == 0) {
-            (function() {
+            (function () {
                 var code = msg.content.slice(5);
                 var t0 = now();
                 exec(code, (error, stdout, stderr) => {
@@ -185,6 +186,33 @@ bot.on("message", function (msg) {
                 });
             })();
             return;
+        }
+        if (msg.content.toLowerCase().indexOf("setwelcome ") == 0) {
+            try {
+                console.log("Changing welcome state.");
+                var arg = msg.content.split(" ");
+                if (arg.length > 1) {
+                    arg = arg[1];
+                    if (arg == "true" || arg == "false") {
+                        if (config.data && config.data.welcome) {
+                            config.data.welcome.enable = arg == "true";
+                            config.save();
+                            bot.updateMessage(msg, "Success");
+                            console.log("Saved config.")
+                        } else {
+                            msg.reply("config entry found");
+                        }
+                    }
+                    else {
+                        msg.reply("setWelcome <true|false>")
+                    }
+                } else {
+                    msg.reply("setWelcome <true|false>")
+                }
+            } catch (error) {
+                console.error(error);
+                bot.updateMessage(msg, error + "Check logs for a detailed explanation");
+            }
         }
     }
     dh.msgHax(msg, bot);
