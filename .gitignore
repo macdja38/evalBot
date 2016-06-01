@@ -33,5 +33,8 @@ node_modules
 ammo.json
 auth.json
 
+#config
+config/*.json
+
 # Optional REPL history
 .node_repl_history

@@ -1,0 +1,19 @@
+{
+  "eval": true,
+  "exec": true,
+  "emote": true,
+  "welcome": {
+    "enable": true,
+    "onlyWhenOnline": true,
+    "servers": [
+      "77176186148499456",
+      "115904439990091779"
+    ],
+    "messages": [
+      "Welcome to the **$server** discord **$user**!",
+      "Welcome **$user**!"],
+    "typingInterval": 3,
+    "minDelay": 3,
+    "maxDelay": 20
+  }
+}
