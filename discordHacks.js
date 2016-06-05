@@ -63,21 +63,35 @@ DiscordHacks.prototype.add = function (msg) {
 };
 
 DiscordHacks.prototype.hax = function (msg, bot) {
+    //break appart the message into sections based on potential emote locations.
     var parts = msg.content.split(/(:\w+:)/g);
     for (var i in parts) {
+        //if each part is of the form :emote: and is not also a proper emote already try to replace it with one.
         if (/:\w+:/.test(parts[i]) && (parts[i-1]).slice(-1) !== "<") {
+            //get the emote and replace the keyword with it.
             parts[i] = this.get(parts[i]);
         }
     }
+    //recombire into one message
     parts = parts.join("");
     if (msg.content != parts) {
+        //if the message is different update the message
         bot.updateMessage(msg, parts, (error, changedMessageMaybe)=> {
+            //the message should now contain all the twitch emotes it needs to, but their's a chance
+            //some of the emotes don't need to be injected but have never been tested. this will check for those.
+            
+            //break the message appart centering around injected emotes that did not get filtered to normal emotes by discord.
                 var parts = changedMessageMaybe.content.split(/(<<:\w+:\d+>\d+>)/g);
+                
                 for (var i in parts) {
                     if (/<<:\w+:\d+>\d+>/.test(parts[i])) {
+                        //if this part is a injected emote and needs to be fixed call getFix on it, which will get the 
+                        //proper emote and record that it did not need to be injeceted to the config file.
                         parts[i] = this.getFix(parts[i]);
                     }
                     else {
+                        //if it's an emote that needed to be injected it will now be in a state that would get filtered out by
+                        //discord, so re-inject.
                         if (/:\w+:/.test(parts[i]) && (parts[i-1]).slice(-1) !== "<") {
                             console.log("did convert" + parts[i]);
                             parts[i] = this.get(parts[i]);
@@ -85,8 +99,10 @@ DiscordHacks.prototype.hax = function (msg, bot) {
                         }
                     }
                 }
+                //recombine into a single message
                 parts = parts.join("");
             console.log("parts:" + parts);
+            //if the new message changed update the message.
             if(changedMessageMaybe.content != parts) {
                 bot.updateMessage(msg, parts);
             }
