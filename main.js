@@ -13,12 +13,8 @@ var Discord = require("discord.js");
 var now = require("performance-now");
 var exec = require("child_process").exec;
 
-var DiscordHacks = require("./discordHacks.js");
-
 var Configs = require("./lib/config.js");
 var config = new Configs("config");
-
-var dh = new DiscordHacks("./ammo.json", require("./ammo.json"));
 
 var AuthDetails = require("./auth.json");
 
@@ -215,7 +211,6 @@ bot.on("message", function (msg) {
             }
         }
     }
-    dh.msgHax(msg, bot);
 });
 
 function clean(text) {
