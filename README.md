@@ -13,9 +13,9 @@ simple bot to eval and execute things for it's master
 
 # Token
 If you are new to discord bot's you may not know how to find your token. Don't worry it's not too bad.
- - open discord in your browser or in the client.
- - Press `Ctrl` + `Shift` + `I`
- - open the `resources` or `storage` tab depending on your thing.
- - Open `Local storage`.
- - Open `discordapp.com`
- - copy the value for token. (the long random thing between the "")
+ - open you're web brower (any will work)
+ - go to `https://discordapp.com/developers/applications/me`
+ - go make new app or select one that you made
+ - Make sure you have the app so it is a bot account
+ - Copy you're bots token
+ - Bam, you got it!
