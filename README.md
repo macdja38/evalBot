@@ -19,3 +19,8 @@ If you are new to discord bot's you may not know how to find your token. Don't w
  - Open `Local storage`.
  - Open `discordapp.com`
  - copy the value for token. (the long random thing between the "")
+
+# Commands
+ - setwelcome <true|false> enables or disables welcoming globaly, welcome can be configured in the config.json file.
+ - eval <javascript>
+ - exec <console command>
