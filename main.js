@@ -215,10 +215,10 @@ bot.on("message", function (msg) {
 
 function clean(text) {
     if (typeof(text) === "string") {
-        return text.replace("``", "`" + String.fromCharCode(8203) + "`").replace(/@/g, "@" + String.fromCharCode(8203));
+        return text.replace(/``/g, "`" + String.fromCharCode(8203) + "`").replace(/@/g, "@" + String.fromCharCode(8203));
     }
     else {
-        return text.toString().replace("``", "`" + String.fromCharCode(8203) + "`").replace(/@/g, "@" + String.fromCharCode(8203))
+        return text.toString().replace(/``/g, "`" + String.fromCharCode(8203) + "`").replace(/@/g, "@" + String.fromCharCode(8203))
     }
 }
 
