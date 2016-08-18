@@ -1,13 +1,17 @@
 # evalBot
 simple bot to eval and execute things for it's master
 
+# Requires
+ - node.js > 6.0
+ - git-cli
+
 # installation instructions
  Requires **node.js** greater than v4 and npm. **pm2** is optional but highly recomended.
 
- - `git clone`
- - open that directory.
- - `npm install --no-optional`
- - duplicate `auth.example.json` to `auth.json`
+ - `git clone https://github.com/macdja38/evalBot.git` clone the project from github.
+ - `cd evalBot` open the project
+ - `npm install --no-optional` install dependancies without optional voice support.
+ - duplicate `auth.example.json` to `auth.json` 
  - edit the `auth.json` file and enter your token.
  - if you have pm2 run the bot with `pm2 start pm2.json` if not run it using `node main.js`
 
