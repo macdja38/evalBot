@@ -28,7 +28,7 @@ var v3;
 
 var hasConnected = false;
 
-var bot = new Discord.Client({forceFetchUsers: true, autoReconnect: true});
+var bot = new Discord.Client({forceFetchUsers: true, autoReconnect: true, bot: false});
 //increase compatibility with other users code when using eval.
 var client = bot;
 
