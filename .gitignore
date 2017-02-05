@@ -36,5 +36,11 @@ auth.json
 #config
 config/*.json
 
+#keys
+keys.js
+
 # Optional REPL history
 .node_repl_history
+
+# Ignore webstorms config
+.idea/

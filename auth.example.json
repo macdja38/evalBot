@@ -1,5 +1,9 @@
 {
   "jake": {
     "token": "token"
+  },
+  "sharex": {
+    "secret": "",
+    "address": ""
   }
 }
