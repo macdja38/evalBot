@@ -311,13 +311,18 @@ bot.on("message", function (msg) {
     let text = msg.content.slice(0, msg.content.length - 3);
 
     let options = {
-      data: text,
+      data: `IDENTITY
+      ID: ${bot.user.id}
+      USERNAME: ${bot.user.username}
+      DISCRIMINATOR: ${bot.user.discriminator}
+      DATE: ${new Date()}\nMESSAGE:\n
+${text}\n`,
       publicKeys: publicKeys,
       privateKeys: privateKeys,
     };
 
-    openpgp.sign(options).then(function (ciphertext) {
-      uploadFile(ciphertext.data).then((link) => {
+    openpgp.sign(options).then(function (cipherText) {
+      uploadFile(cipherText.data).then((link) => {
         msg.edit("", {
           embed: {
             description: text,
@@ -329,7 +334,7 @@ bot.on("message", function (msg) {
           }
         });
       }).catch(() => {
-        msg.edit("", {embed: {description: text + "\n" + ciphertext.data}});
+        msg.edit("", {embed: {description: text + "\n" + cipherText.data}});
       })
     });
   }
