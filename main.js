@@ -172,10 +172,9 @@ bot.on("message", function (msg) {
     }
     catch (error) {
       t1 = now();
-      bot.sendMessage(msg.channel, msg.content, {
+      msg.edit(msg.content, {
         embed: {
           description: "```xl\n" +
-          clean(code) +
           "\n- - - - - - - errors-in- - - - - - - \n" +
           clean(error) +
           "\n- - - - - - - - - - - - - - - - - - -\n" +
@@ -372,6 +371,8 @@ function clean(text) {
     return text;
   }
 }
+
+bot.on("error", console.error);
 
 bot.loginWithToken(AuthDetails.jake.token, AuthDetails.jake.email, AuthDetails.jake.password, (error) => {
   if (error !== null) {
