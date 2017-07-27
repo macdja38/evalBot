@@ -9,7 +9,7 @@
  change in the future.
  */
 
-let Discord = require("../discord.js");
+let Discord = require("discord.js");
 let now = require("performance-now");
 let exec = require("child_process").exec;
 
