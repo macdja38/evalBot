@@ -20,6 +20,16 @@ let AuthDetails = require("./auth.json");
 
 let request = require("request");
 
+let fs = require("fs");
+let stream = require("stream");
+let archiver = require("archiver");
+
+let url = require("url");
+let http = require("http");
+let https = require("https");
+let path = require("path");
+let util = require("util");
+
 let openpgp = require('openpgp');
 
 let publicKeys = false, privateKeys = false;
@@ -51,10 +61,12 @@ var bot = new Discord.Client({forceFetchUsers: false, autoReconnect: true, bot: 
 var client = bot;
 
 bot.on("ready", function () {
+  let t2 = now();
   bot.setStatusIdle();
   if (!hasConnected) {
     console.log("Ready to begin! Serving in " + bot.channels.length + " channels");
     console.log("users: " + bot.users.length);
+    console.log(`Ready in ${(t2 - t1)}ms`);
     hasConnected = true;
   } else {
     console.error("Reconnected Successfully")
@@ -79,7 +91,7 @@ bot.on('serverNewMember', (server, user) => {
      console.log("Bots master is online");
      */
     var messages = config.get("welcome", {
-      messages: ["Welcome **$user**!"]
+      messages: ["Welcome **$user**!"],
     }).messages;
     var min = config.get("welcome", {minDelay: 3}).minDelay;
     var max = config.get("welcome", {maxDelay: 20}).maxDelay;
@@ -103,19 +115,67 @@ bot.on('serverNewMember', (server, user) => {
       }, (msgDelay + 10) * 1000);
     }
     setTimeout(() => {
-      bot.sendMessage(
-        server.general,
-        clean(messages[Math.floor(Math.random() * messages.length)]
-          .replace(/\$server/g, server.name).replace(/\$user/g, user.username))
-      );
-    }, msgDelay * 1000
+        bot.sendMessage(
+          server.general,
+          clean(messages[Math.floor(Math.random() * messages.length)]
+            .replace(/\$server/g, server.name).replace(/\$user/g, user.username)),
+        );
+      }, msgDelay * 1000,
     )
   }
 });
 
+function streamToBuffer(stream) {
+  return new Promise((resolve, reject) => {
+    const dataArray = [];
+    stream.on("data", (data) => {
+      dataArray.append(data);
+    });
+    stream.on("end", () => {
+      resolve(Buffer.concat(dataArray))
+    });
+    stream.on("error", (error) => {
+      reject(error);
+    })
+  })
+}
+
 bot.on("message", function (msg) {
   if (msg.author.id !== bot.user.id) return;
-  if (msg.content.indexOf("eval ") == 0) {
+  if (msg.content.indexOf("edump ") === 0) {
+    let arg = msg.content.slice(6);
+    const emojiLinks = msg.server.emojis.map(e => ({
+      name: e.name,
+      url: `https://cdn.discordapp.com/emojis/${e.id}.png`,
+    }));
+
+    const zipArchive = archiver.create("zip", {zlib: {level: 9}});
+
+    const emojiRequests = emojiLinks.map((e, index, array) => ({name: e.name, stream: request.get(e.url)}));
+
+    emojiRequests.forEach(r => zipArchive.append(r.stream, {name: `${r.name}.png`}));
+
+    const emojiPromises = emojiRequests.map(r => new Promise((resolve, reject) => r.stream.on("error", reject).on("end", resolve)));
+
+    if (arg === "file") {
+      const output = fs.createWriteStream(__dirname + "/emoji.zip");
+      //Promise.all(emojiPromises).then(() => {
+      zipArchive.finalize();
+      zipArchive.pipe(output);
+      // });
+    } else if (arg === "discord") {
+      Promise.all(emojiPromises).then(() => {
+        const output = new stream.PassThrough();
+        zipArchive.finalize();
+        zipArchive.pipe(output);
+        bot.sendFile(msg.channel, output, "emoji.zip", `${emojiLinks.length} emoji dumped`);
+      });
+    } else {
+      msg.edit("Please supply a valid target either `file` or `discord`.");
+    }
+  }
+
+  if (msg.content.indexOf("eval ") === 0) {
     if (msg.embeds.length > 0) return;
     let code = msg.content.slice(5);
     //noinspection JSUnusedLocalSymbols
@@ -150,8 +210,8 @@ bot.on("message", function (msg) {
             msg.edit(msg.content, {
               embed: {
                 description: embedText,
-                color: 0x00FF00
-              }
+                color: 0x00FF00,
+              },
             })
           }).catch((error) => {
             embedText = embedText.substring(0, embedText.length - 4);
@@ -162,8 +222,8 @@ bot.on("message", function (msg) {
             msg.edit(msg.content, {
               embed: {
                 description: embedText,
-                color: 0xFF0000
-              }
+                color: 0xFF0000,
+              },
             })
           }).catch(error => console.error(error));
         }
@@ -179,14 +239,14 @@ bot.on("message", function (msg) {
           clean(error) +
           "\n- - - - - - - - - - - - - - - - - - -\n" +
           "In " + (t1 - t0) + " milliseconds!\n```",
-          color: 0xFF0000
-        }
+          color: 0xFF0000,
+        },
       });
       console.error(error);
     }
     return;
   }
-  if (msg.content.indexOf("exec ") == 0) {
+  if (msg.content.indexOf("exec ") === 0) {
     (function () {
       var code = msg.content.slice(5);
       var t0 = now();
@@ -219,7 +279,7 @@ bot.on("message", function (msg) {
     })();
     return;
   }
-  if (msg.content.toLowerCase().indexOf("setwelcome ") == 0) {
+  if (msg.content.toLowerCase().indexOf("setwelcome ") === 0) {
     try {
       console.log("Changing welcome state.");
       let arg = msg.content.split(" ");
@@ -248,7 +308,7 @@ bot.on("message", function (msg) {
     return;
   }
 
-  if (msg.content.toLowerCase().indexOf("setavatar ") == 0) {
+  if (msg.content.toLowerCase().indexOf("setavatar ") === 0) {
     try {
       console.log("Changing avatar");
       let arg = msg.content.split(" ");
@@ -257,7 +317,7 @@ bot.on("message", function (msg) {
       request({
         method: 'GET',
         url: arg,
-        encoding: null
+        encoding: null,
       }, (err, res, image) => {
         if (err) {
           client.sendMessage(msg.channel, "Failed to get a valid image.");
@@ -282,7 +342,7 @@ bot.on("message", function (msg) {
     return
   }
 
-  if (msg.content.toLowerCase().indexOf("setusername ") == 0) {
+  if (msg.content.toLowerCase().indexOf("setusername ") === 0) {
     try {
       console.log("Changing username");
       let arg = msg.content.split(" ");
@@ -328,9 +388,9 @@ ${text}\n`,
             footer: {
               text: link,
               icon_url: "https://pvpcraft.ca/i/lock.png",
-              proxy_icon_url: "https://pvpcraft.ca/i/lock.png"
-            }
-          }
+              proxy_icon_url: "https://pvpcraft.ca/i/lock.png",
+            },
+          },
         });
       }).catch(() => {
         msg.edit("", {embed: {description: text + "\n" + cipherText.data}});
@@ -348,10 +408,10 @@ function uploadFile(data) {
           value: data,
           options: {
             filename: "file.txt",
-            contentType: "application/pgp-signature"
-          }
-        }
-      }
+            contentType: "application/pgp-signature",
+          },
+        },
+      },
     }, (err, res) => {
       if (err) {
         reject(err);
@@ -374,6 +434,8 @@ function clean(text) {
 
 bot.on("error", console.error);
 
+console.log("starting login");
+let t1 = now();
 bot.loginWithToken(AuthDetails.jake.token, AuthDetails.jake.email, AuthDetails.jake.password, (error) => {
   if (error !== null) {
     console.error(error);
